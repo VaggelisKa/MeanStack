@@ -8,12 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from '../app/material.module';
 import { HeaderComponent } from './header/header/header.component';
+import { PostListComponent } from './posts/post-list/post-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostCreateComponent,
-    HeaderComponent
+    HeaderComponent,
+    PostListComponent
   ],
   imports: [
     BrowserModule,

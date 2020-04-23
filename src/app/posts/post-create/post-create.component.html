@@ -1,7 +1,13 @@
-<mat-card>       
-        <mat-form-field>
-          <mat-label>Leave a comment</mat-label>
-          <textarea matInput rows="3"></textarea>
-        </mat-form-field>
-        <button mat-raised-button color="primary">Primary</button>  
+<mat-card>
+    <mat-form-field>
+        <mat-label>Enter name</mat-label>
+        <input matInput type="text" [(ngModel)]="enteredTitle">
+    </mat-form-field>
+    
+    <mat-form-field>
+        <mat-label>Leave a comment</mat-label>
+        <textarea matInput rows="" [(ngModel)]="enteredContent"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="onAddPost()">Primary</button>  
 </mat-card>

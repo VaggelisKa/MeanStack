@@ -10,6 +10,7 @@ import { MaterialModule } from '../app/material.module';
 import { HeaderComponent } from './header/header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { FormsModule } from '@angular/forms';
+import { PostsService } from './posts/posts.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     MaterialModule,
     FormsModule
   ],
-  providers: [],
+  providers: [PostsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

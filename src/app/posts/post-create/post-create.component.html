@@ -1,13 +1,31 @@
 <mat-card>
-    <mat-form-field>
-        <mat-label>Enter name</mat-label>
-        <input matInput type="text" [(ngModel)]="enteredTitle">
-    </mat-form-field>
-    
-    <mat-form-field>
-        <mat-label>Leave a comment</mat-label>
-        <textarea matInput rows="" [(ngModel)]="enteredContent"></textarea>
-    </mat-form-field>
+    <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+        <mat-form-field>
+            <mat-label>Enter name</mat-label>
+            <input 
+                matInput 
+                type="text" 
+                ngModel
+                name="postName"
+                required
+            >
+        </mat-form-field>
+        
+        <mat-form-field>
+            <mat-label>Leave a comment</mat-label>
+            <textarea 
+                matInput 
+                ngModel
+                name="postContent"
+                required
+            ></textarea>
+        </mat-form-field>
 
-    <button mat-raised-button color="primary" (click)="onAddPost()">Primary</button>  
+        <button 
+            mat-flat-button
+            type="submit" 
+            color="primary"
+            [disabled]="!form.valid"
+        >Post</button>
+    </form>  
 </mat-card>

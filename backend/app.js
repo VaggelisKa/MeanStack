@@ -1,7 +1,19 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+var Post = require('./models/post');
 
 var app = express();
+
+mongoose.connect('mongodb+srv://Vaggelis:WMWhztV00SN8qaoC@cluster0-oaxjo.mongodb.net/test?retryWrites=true&w=majority', 
+                { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: true,})
+    .then(() => {
+        console.log('connected to database');
+    })
+    .catch(() => {
+        console.log('connection failed');
+    });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -17,7 +29,10 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/posts', (req, res, next) => {
-    const post = req.body;
+    const post = new Post({
+        title: req.body.title,
+        content: req.body.content
+    });
     console.log(post);
     res.status(201).json({
         message: 'Post added'

@@ -5,7 +5,7 @@
             <input 
                 matInput 
                 type="text" 
-                [ngModel] = "post.title"
+                [ngModel] = "post?.title"
                 name="postName"
                 required
             >
@@ -15,7 +15,7 @@
             <mat-label>Leave a comment</mat-label>
             <textarea 
                 matInput 
-                [ngModel] = "post.content"
+                [ngModel] = "post?.content"
                 name="postContent"
                 required
             ></textarea>

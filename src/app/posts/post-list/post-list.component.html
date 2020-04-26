@@ -6,7 +6,7 @@
         <p>{{post.content}}</p>
             
     <mat-action-row>
-        <button mat-mini-fab color="warn">
+        <button mat-mini-fab color="warn" (click)="onDelete(post.id)">
             <mat-icon>delete</mat-icon>
         </button>
         

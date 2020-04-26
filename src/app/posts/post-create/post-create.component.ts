@@ -19,11 +19,6 @@ export class PostCreateComponent implements OnInit {
   constructor(private postsService: PostsService,
               private route: ActivatedRoute) {}
 
-  onSubmit(form: NgForm) {
-    this.postsService.addPost(form.value.postName, form.value.postContent);
-    form.resetForm();
-  }
-
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -36,6 +31,17 @@ export class PostCreateComponent implements OnInit {
         this.postId = null;
       }
     });
+  }
+
+  onSubmit(form: NgForm) {
+    if (this.mode === 'create') {
+      this.postsService.addPost(form.value.postName, form.value.postContent);
+    }
+    else {
+      this.postsService.updatePost(this.postId, form.value.postName, form.value.postContent);
+    }
+
+    form.resetForm();
   }
 
 }

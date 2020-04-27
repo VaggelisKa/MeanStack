@@ -6,3 +6,7 @@ button {
     display: flex;
     margin-left: auto;
 }
+
+mat-spinner {
+    margin: auto;
+}

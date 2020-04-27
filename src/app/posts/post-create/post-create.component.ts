@@ -1,30 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   enteredTitle: string;
   enteredContent: string;
+  post: Post;
+  isLoading = false;
   private mode = 'create';
   private postId: string;
-  post: Post;
+
+  loadingSub: Subscription;
 
   constructor(private postsService: PostsService,
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.loadingSub = this.postsService.isLoading.subscribe(result => {
+      this.isLoading = result;
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         this.postsService.getPost(this.postId).subscribe(postData => {
+          this.isLoading = false;
           this.post = {
             id: postData._id,
             title: postData.title,
@@ -48,6 +57,10 @@ export class PostCreateComponent implements OnInit {
     }
 
     form.resetForm();
+  }
+
+  ngOnDestroy() {
+    this.loadingSub.unsubscribe();
   }
 
 }

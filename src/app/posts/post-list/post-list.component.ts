@@ -10,12 +10,18 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
+  isLoading = false;
   posts: Post[] = [];
   postSub: Subscription;
+  loadingSub: Subscription;
 
   constructor(private postsService: PostsService) { }
 
   ngOnInit(): void {
+    this.loadingSub = this.postsService.isLoading.subscribe(result => {
+      this.isLoading = result;
+    });
+
     this.postsService.getPosts();
     this.postSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
       this.posts = posts;
@@ -28,6 +34,7 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postSub.unsubscribe();
+    this.loadingSub.unsubscribe();
   }
 
 }

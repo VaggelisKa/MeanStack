@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
-import { Subscription, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import * as fromRoot from '../../app.reducer';
 import { Store, select } from '@ngrx/store';

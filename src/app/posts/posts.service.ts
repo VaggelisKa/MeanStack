@@ -5,16 +5,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import * as fromRoot from '.././app.reducer';
+import { Store } from '@ngrx/store';
+import { startLoading, stopLoading } from './store/post.actions';
+
 @Injectable()
 export class PostsService {
     private postsUpdated = new Subject<Post[]>();
     private posts: Post[] = [];
     isLoading = new Subject<boolean>();
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(private http: HttpClient,
+                private router: Router,
+                private store: Store<fromRoot.State>) {}
 
     getPosts() {
-        this.isLoading.next(true);
+        this.store.dispatch(startLoading());
         this.http.get<{message: string, posts: any}>('http://localhost:3000/api/posts')
         .pipe(map(postData => {
             return postData.posts.map(post => {
@@ -28,7 +34,7 @@ export class PostsService {
         .subscribe((transformedPostData) => {
             this.posts = transformedPostData;
             this.postsUpdated.next([...this.posts]);
-            this.isLoading.next(false);
+            this.store.dispatch(stopLoading());
         });
     }
 
@@ -37,7 +43,7 @@ export class PostsService {
     }
 
     getPost(id: string) {
-        this.isLoading.next(true);
+        this.store.dispatch(startLoading());
         return this.http.get<{_id: string, title: string, content: string}>('http://localhost:3000/api/posts/' + id);
     }
 
@@ -48,7 +54,7 @@ export class PostsService {
             content
         };
 
-        this.isLoading.next(true);
+        this.store.dispatch(startLoading());
         this.http.put('http://localhost:3000/api/posts/' + id, post)
         .subscribe(response => {
             console.log('postUpdated');
@@ -58,12 +64,12 @@ export class PostsService {
             this.posts = updatedPosts;
             this.postsUpdated.next([...this.posts]);
             this.router.navigate(['/']);
-            this.isLoading.next(false);
+            this.store.dispatch(stopLoading());
         });
     }
 
     addPost(title: string, content: string) {
-        this.isLoading.next(true);
+        this.store.dispatch(startLoading());
         const post = {id: null, title, content};
 
         this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
@@ -72,18 +78,18 @@ export class PostsService {
             this.posts.push(post);
             this.postsUpdated.next([...this.posts]);
             this.router.navigate(['/']);
-            this.isLoading.next(false);
+            this.store.dispatch(stopLoading());
         });
     }
 
     deletePost(id: string) {
-        this.isLoading.next(true);
+        this.store.dispatch(startLoading());
         this.http.delete('http://localhost:3000/api/posts/' + id)
         .subscribe(() => {
             const updatedPosts = this.posts.filter(post => post.id !== id);
             this.posts = updatedPosts;
             this.postsUpdated.next([...this.posts]);
-            this.isLoading.next(false);
+            this.store.dispatch(stopLoading());
         });
     }
 }

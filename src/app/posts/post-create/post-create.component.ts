@@ -3,7 +3,10 @@ import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, of } from 'rxjs';
+
+import * as fromRoot from '../../app.reducer';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-post-create',
@@ -14,26 +17,23 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   enteredTitle: string;
   enteredContent: string;
   post: Post;
-  isLoading = false;
+  isLoading$: Observable<boolean>;
   private mode = 'create';
   private postId: string;
 
-  loadingSub: Subscription;
-
   constructor(private postsService: PostsService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private store: Store<fromRoot.State>) {}
 
   ngOnInit(): void {
-    this.loadingSub = this.postsService.isLoading.subscribe(result => {
-      this.isLoading = result;
-    });
+    this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         this.postsService.getPost(this.postId).subscribe(postData => {
-          this.isLoading = false;
+          this.isLoading$ = of(false);
           this.post = {
             id: postData._id,
             title: postData.title,
@@ -60,7 +60,6 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.loadingSub.unsubscribe();
   }
 
 }

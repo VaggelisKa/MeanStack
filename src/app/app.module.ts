@@ -15,7 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { StoreModule } from '@ngrx/store';
-import * as fromPosts from './posts/store/post.reducer';
+import { reducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -31,8 +31,8 @@ import * as fromPosts from './posts/store/post.reducer';
     MaterialModule,
     FormsModule,
     HttpClientModule,
+    StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
-    StoreModule.forRoot({ post: fromPosts.reducer })
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

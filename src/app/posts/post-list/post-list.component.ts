@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+
+import * as fromRoot from '../../app.reducer';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-post-list',
@@ -9,17 +12,15 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  isLoading = false;
+  isLoading$: Observable<boolean>;
   posts: Post[] = [];
   postSub: Subscription;
-  loadingSub: Subscription;
 
-  constructor(private postsService: PostsService) { }
+  constructor(private postsService: PostsService,
+              private store: Store<fromRoot.State>) { }
 
   ngOnInit(): void {
-    this.loadingSub = this.postsService.isLoading.subscribe(result => {
-      this.isLoading = result;
-    });
+    this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
 
     this.postsService.getPosts();
     this.postSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
@@ -33,7 +34,6 @@ export class PostListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.postSub.unsubscribe();
-    this.loadingSub.unsubscribe();
   }
 
 }

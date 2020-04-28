@@ -12,6 +12,10 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { FormsModule } from '@angular/forms';
 import { PostsService } from './posts/posts.service';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { StoreModule } from '@ngrx/store';
+import * as fromPosts from './posts/store/post.reducer';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,9 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    StoreModule.forRoot({ post: fromPosts.reducer })
   ],
   providers: [PostsService],
   bootstrap: [AppComponent]

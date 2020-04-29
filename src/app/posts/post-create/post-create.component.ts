@@ -4,6 +4,7 @@ import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
 import { Subscription } from 'rxjs';
+import { Type } from './type.validator';
 
 @Component({
   selector: 'app-post-create',
@@ -36,7 +37,10 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       }),
 
       content: new FormControl(null, {validators: Validators.required}),
-      image: new FormControl(null, {validators: [Validators.required]})
+      image: new FormControl(null, {
+        validators: [Validators.required],
+        asyncValidators: [Type]
+      })
     });
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

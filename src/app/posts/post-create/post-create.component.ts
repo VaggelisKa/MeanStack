@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
@@ -15,6 +15,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   enteredContent: string;
   post: Post;
   isLoading = false;
+  form: FormGroup;
   private mode = 'create';
   private postId: string;
 
@@ -28,6 +29,14 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       this.isLoading = result;
     });
 
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)]
+      }),
+
+      content: new FormControl(null, {validators: Validators.required})
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
@@ -39,6 +48,11 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             title: postData.title,
             content: postData.content
           };
+
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content
+          });
         });
       }
       else {
@@ -48,15 +62,15 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     });
   }
 
-  onSubmit(form: NgForm) {
+  onSubmit() {
     if (this.mode === 'create') {
-      this.postsService.addPost(form.value.postName, form.value.postContent);
+      this.postsService.addPost(this.form.value.title, this.form.value.content);
     }
     else {
-      this.postsService.updatePost(this.postId, form.value.postName, form.value.postContent);
+      this.postsService.updatePost(this.postId, this.form.value.title, this.form.value.content);
     }
 
-    form.resetForm();
+    this.form.reset();
   }
 
   ngOnDestroy() {

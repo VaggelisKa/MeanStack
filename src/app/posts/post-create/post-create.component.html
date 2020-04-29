@@ -1,25 +1,23 @@
 <mat-card>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
-    <form (ngSubmit)="onSubmit(form)" #form="ngForm" *ngIf="!isLoading">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()"  *ngIf="!isLoading">
         <mat-form-field>
             <mat-label>Enter name</mat-label>
             <input 
                 matInput 
-                type="text" 
-                [ngModel] = "post?.title"
-                name="postName"
-                required
+                type="text"
+                formControlName="title" 
             >
+            <mat-error *ngIf="form.get('title').invalid">Enter post title</mat-error>
         </mat-form-field>
         
         <mat-form-field>
             <mat-label>Leave a comment</mat-label>
             <textarea 
-                matInput 
-                [ngModel] = "post?.content"
-                name="postContent"
-                required
+                matInput
+                formControlName="content" 
             ></textarea>
+            <mat-error *ngIf="form.get('content').invalid">Enter content</mat-error>
         </mat-form-field>
 
         <div>

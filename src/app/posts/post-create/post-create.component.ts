@@ -16,6 +16,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   post: Post;
   isLoading = false;
   form: FormGroup;
+  imagePreview: string;
   private mode = 'create';
   private postId: string;
 
@@ -68,6 +69,12 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     this.form.patchValue({image: file});
     this.form.get('image').updateValueAndValidity();
     console.log(file, this.form);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit() {

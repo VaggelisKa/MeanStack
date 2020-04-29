@@ -2,11 +2,15 @@ mat-form-field, textarea {
     width: 100%;
 }
 
-button {
+.submitBtn {
     display: flex;
     margin-left: auto;
 }
 
 mat-spinner {
     margin: auto;
+}
+
+input[type="file"] {
+    visibility: hidden;
 }

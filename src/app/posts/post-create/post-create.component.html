@@ -22,6 +22,17 @@
             ></textarea>
         </mat-form-field>
 
+        <div>
+            <button 
+                mat-button 
+                type="button"
+                (click)="filePicker.click()"
+            >
+                <mat-icon>attachment</mat-icon>
+            </button>
+            <input type="file" #filePicker>
+        </div>
+
         <button
             class="submitBtn" 
             mat-flat-button

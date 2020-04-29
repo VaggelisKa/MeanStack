@@ -28,7 +28,7 @@
             >
                 <mat-icon>attachment</mat-icon>
             </button>
-            <input type="file" #filePicker>
+            <input type="file" #filePicker (change)="onImagePicked($event)">
         </div>
 
         <button

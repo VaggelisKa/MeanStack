@@ -65,20 +65,29 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.put('/:id', (req, res, next) => {
-    const post = new Post({
-        _id: req.body.id, 
-        title: req.body.title, 
-        content: req.body.content
+router.put(
+    '/:id', 
+    multer({storage: storage}).single('image'), 
+    (req, res, next) => {
+        let imagePath = req.body.imagePath;
+        if (req.file) {
+            const url = req.protocol + '://' + req.get('host');
+            imagePath = url + '/images/' + req.file.filename
+        }
+        const post = new Post({
+            _id: req.body.id, 
+            title: req.body.title, 
+            content: req.body.content,
+            imagePath: imagePath
     });
-    Post.updateOne({_id: req.params.id}, post)
-        .then(result => {
-            console.log(result);
+        Post.updateOne({_id: req.params.id}, post)
+            .then(result => {
+                console.log(result);
 
-            res.status(200).json({
-                message: 'Post updated'
-            });
-        })
+                res.status(200).json({
+                    message: 'Post updated'
+                });
+            })
 });
 
 router.delete('/:id', (req, res, next) => {

@@ -4,7 +4,7 @@ import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
 import { Subscription } from 'rxjs';
-import { Type } from './type.validator';
+import { Type } from './validators/type.validator';
 
 @Component({
   selector: 'app-post-create',

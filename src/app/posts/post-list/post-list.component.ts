@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Post } from '../post.model';
+import { Post } from '../models/post.model';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';

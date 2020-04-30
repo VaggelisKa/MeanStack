@@ -1,4 +1,4 @@
-import { Post } from './post.model';
+import { Post } from './models/post.model';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,8 @@ export class PostsService {
                 return {
                     title: post.title,
                     content: post.content,
-                    id: post._id
+                    id: post._id,
+                    imagePath: post.imagePath
                 };
             });
         }))
@@ -41,11 +42,12 @@ export class PostsService {
         return this.http.get<{_id: string, title: string, content: string}>('http://localhost:3000/api/posts/' + id);
     }
 
-    updatePost(id: string, title: string, content: string) {
+    updatePost(id: string, title: string, content: string, imagePath: null) {
         const post: Post = {
             id,
             title,
-            content
+            content,
+            imagePath
         };
 
         this.isLoading.next(true);
@@ -69,12 +71,13 @@ export class PostsService {
         postData.append('content', content);
         postData.append('image', image, title);
 
-        this.http.post<{message: string, postId: string}>('http://localhost:3000/api/posts', postData)
+        this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
         .subscribe((responseData) => {
             const post: Post = {
-                id: responseData.postId,
+                id: responseData.post.id,
                 title,
-                content
+                content,
+                imagePath: responseData.post.imagePath
             };
             this.posts.push(post);
             this.postsUpdated.next([...this.posts]);

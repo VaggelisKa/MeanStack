@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Post } from '../post.model';
+import { Post } from '../models/post.model';
 import { Subscription } from 'rxjs';
 import { Type } from './validators/type.validator';
 
@@ -52,7 +52,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
           this.post = {
             id: postData._id,
             title: postData.title,
-            content: postData.content
+            content: postData.content,
+            imagePath: null
           };
 
           this.form.setValue({
@@ -86,7 +87,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
     }
     else {
-      this.postsService.updatePost(this.postId, this.form.value.title, this.form.value.content);
+      this.postsService.updatePost(this.postId, this.form.value.title, this.form.value.content, null);
     }
 
     this.form.reset();

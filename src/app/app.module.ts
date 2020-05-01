@@ -12,13 +12,17 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PostsService } from './posts/posts.service';
 import { HttpClientModule } from '@angular/common/http';
+import { SignupComponent } from './auth/signup/signup.component';
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostCreateComponent,
     HeaderComponent,
-    PostListComponent
+    PostListComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,30 @@
+<mat-card>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <form *ngIf="!isLoading">
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input 
+                matInput 
+                type="email"
+                name=""
+            >
+            <mat-error>Enter post title</mat-error>
+        </mat-form-field>
+        
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input 
+                matInput 
+                type="password"
+            >
+            <mat-error>Enter post title</mat-error>
+        </mat-form-field>
+
+        <button
+            class="submitBtn" 
+            mat-flat-button
+            type="submit" 
+            color="primary"
+        >Post</button>
+    </form>  
+</mat-card>

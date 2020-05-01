@@ -31,4 +31,8 @@ button {
     color: RGB(103, 59, 183);
     font-weight: bold;
     left: 40%;
-  }
+}
+
+mat-paginator {
+    margin-top: 1rem;
+}

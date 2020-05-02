@@ -1,19 +1,37 @@
 <div id="wrapper">
     <div class="form-container">
         <span class="form-heading">Login</span>
-        <form>
+        <form (ngSubmit)="onSubmit(authForm)" #authForm="ngForm">
             <div class="input-group">
                 <mat-icon>email</mat-icon>
-                <input type="email" placeholder="Email...">
+                <input
+                    type="email"
+                    placeholder="Email..." 
+                    ngModel 
+                    name="email"
+                    required
+                    pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                    #emailInput="ngModel"
+                >
+                <mat-error *ngIf="emailInput.invalid && emailInput.touched">Please enter a valid email</mat-error>
                 <span class="bar"></span>
             </div>
             <div class="input-group">
                 <mat-icon>lock</mat-icon>
-                <input type="password" placeholder="Password...">
+                <input 
+                    type="password" 
+                    placeholder="Password..." 
+                    ngModel 
+                    name="password"
+                    required
+                    minlength="6"
+                    #passwordInput="ngModel"
+                >
+                <mat-error *ngIf="passwordInput.invalid && passwordInput.dirty">Please enter a stronger password</mat-error>
                 <span class="bar"></span>
             </div>
             <div class="input-group">
-                <button>
+                <button type="submit" [disabled]="!authForm.valid">
                     <mat-icon>send</mat-icon>
                 </button>
             </div>

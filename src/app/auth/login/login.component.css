@@ -85,6 +85,7 @@ form {
     height: 1px;
 }
 
+
 .input-group .bar::before {
     content: '';
     position: absolute;
@@ -94,8 +95,13 @@ form {
     transition: width 550ms;
 }
 
-.input-group input:focus + .bar::before{
+.input-group input:focus + .bar::before {
     width: 100%;
+}
+
+.input-group button:disabled {
+    background: #ddd;
+    pointer-events: none;
 }
 
 .input-group button {
@@ -132,6 +138,10 @@ form {
     border-bottom: 2px solid #673bb7;
 }
 
+mat-error {
+    width: 100%;
+}
+
 @media screen and (max-width: 700px) {
     .form-container::before{
         height: 10rem;
@@ -146,5 +156,9 @@ form {
         border-radius: initial;
         transform: initial;
         box-shadow: none;
+    }
+
+    mat-error {
+        width: 100%;
     }
 }

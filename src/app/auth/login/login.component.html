@@ -24,10 +24,9 @@
                     ngModel 
                     name="password"
                     required
-                    minlength="6"
                     #passwordInput="ngModel"
                 >
-                <mat-error *ngIf="passwordInput.invalid && passwordInput.dirty">Please enter a stronger password</mat-error>
+                <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">Please enter a stronger password</mat-error>
                 <span class="bar"></span>
             </div>
             <div class="input-group">
@@ -36,7 +35,7 @@
                 </button>
             </div>
             <div class="switch-login">
-                <a href="">Don't have an account? <span>Signup</span></a>
+                <a routerLink="/signup">Don't have an account? <span>Signup</span></a>
             </div>
         </form>
     </div>

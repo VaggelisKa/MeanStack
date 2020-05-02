@@ -3,6 +3,19 @@
         <span class="form-heading">Signup</span>
         <form (ngSubmit)="onSignup(authForm)" #authForm="ngForm">
             <div class="input-group">
+                <mat-icon>person</mat-icon>
+                <input
+                    type="text"
+                    placeholder="Username..." 
+                    ngModel 
+                    name="username"
+                    required
+                    #usernameInput="ngModel"
+                >
+                <mat-error *ngIf="usernameInput.invalid && usernameInput.touched">Username is required</mat-error>
+                <span class="bar"></span>
+            </div>
+            <div class="input-group">
                 <mat-icon>email</mat-icon>
                 <input
                     type="email"

@@ -9,6 +9,7 @@ router.post("/signup", (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
+                username: req.body.username,
                 email: req.body.email,
                 password: hash
             });
@@ -29,7 +30,7 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.email, username: req.body.username })
         .then(user => {
             if  (!user) {
                 res.status(404).json({
@@ -45,6 +46,7 @@ router.post('/login', (req, res, next) => {
                 });
             };
             const token = jwt.sign({
+                username: user.username,
                 email: user.email, 
                 userId: user._id
             }, 'secret', {expiresIn: '1h'});

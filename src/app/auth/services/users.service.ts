@@ -7,8 +7,9 @@ export class UsersService {
 
     constructor(private http: HttpClient) {}
 
-    createUser(email: string, password: string) {
+    createUser(username: string, email: string, password: string) {
         const data: AuthData = {
+            username,
             email,
             password
         };

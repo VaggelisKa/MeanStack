@@ -5,15 +5,19 @@
     <span class="spacer"></span>
     <ul>
         <li>
-            <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
+            <a mat-button routerLink="/login" routerLinkActive="mat-accent" *ngIf="!isAuth">Login</a>
         </li>
 
         <li>
-            <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Signup</a>
+            <a mat-button routerLink="/signup" routerLinkActive="mat-accent" *ngIf="!isAuth">Signup</a>
         </li>
 
         <li>
-            <a mat-button routerLink="/create" routerLinkActive="mat-accent">Create Post</a>
+            <a mat-button routerLink="/create" routerLinkActive="mat-accent" *ngIf="isAuth">Create Post</a>
+        </li>
+
+        <li>
+            <button mat-flat-button color="warn" routerLink="/login" *ngIf="isAuth">Logout</button>
         </li>
     </ul>
 </mat-toolbar>

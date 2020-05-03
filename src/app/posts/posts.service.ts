@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class PostsService {
     private postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
     private posts: Post[] = [];
-    isLoading = new Subject<boolean>();
+    postsAreLoading = new Subject<boolean>();
 
     constructor(private http: HttpClient,
                 private router: Router) {}
@@ -17,7 +17,7 @@ export class PostsService {
     getPosts(postsPerPage: number, currentPage: number) {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
-        this.isLoading.next(true);
+        this.postsAreLoading.next(true);
         this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
         .pipe(map(postData => {
             return {posts: postData.posts.map(post => {
@@ -35,7 +35,7 @@ export class PostsService {
                 posts: [...this.posts],
                 postsCount: transformedPostData.maxPosts
             });
-            this.isLoading.next(false);
+            this.postsAreLoading.next(false);
         });
     }
 
@@ -44,7 +44,7 @@ export class PostsService {
     }
 
     getPost(id: string) {
-        this.isLoading.next(true);
+        this.postsAreLoading.next(true);
         return this.http.get<{_id: string, title: string, content: string, imagePath: string}>('http://localhost:3000/api/posts/' + id);
     }
 
@@ -67,16 +67,16 @@ export class PostsService {
             };
         }
 
-        this.isLoading.next(true);
+        this.postsAreLoading.next(true);
         this.http.put('http://localhost:3000/api/posts/' + id, postData)
         .subscribe(() => {
             this.router.navigate(['/']);
-            this.isLoading.next(false);
+            this.postsAreLoading.next(false);
         });
     }
 
     addPost(title: string, content: string, image: File) {
-        this.isLoading.next(true);
+        this.postsAreLoading.next(true);
         const postData = new FormData();
         postData.append('title', title);
         postData.append('content', content);
@@ -85,12 +85,12 @@ export class PostsService {
         this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
         .subscribe(() => {
             this.router.navigate(['/']);
-            this.isLoading.next(false);
+            this.postsAreLoading.next(false);
         });
     }
 
     deletePost(id: string) {
-        this.isLoading.next(true);
+        this.postsAreLoading.next(true);
         return this.http.delete('http://localhost:3000/api/posts/' + id);
     }
 }

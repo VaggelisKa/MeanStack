@@ -41,7 +41,15 @@ export class UsersService {
             .subscribe(response => {
                 console.log(response);
                 this.token = response.token;
-                this._authStatusListener.next(true);
+
+                if (this.token) {
+                    this.authStatusListener.next(true);
+                }
             });
+    }
+
+    logout() {
+        this.token = null;
+        this.authStatusListener.next(false);
     }
 }

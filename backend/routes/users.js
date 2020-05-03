@@ -30,14 +30,16 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    User.findOne({ email: req.body.email, username: req.body.username })
+    let fetchedUser;
+    User.findOne({ email: req.body.email})
         .then(user => {
             if  (!user) {
-                res.status(404).json({
+                return res.status(404).json({
                     message: 'User doesnt exist'
                 });
             }
-            return bcrypt.compare(re.body.password, user.password)
+            fetchedUser = user;
+            return bcrypt.compare(req.body.password, user.password)
         })
         .then(result => {
             if (!result) {
@@ -46,10 +48,15 @@ router.post('/login', (req, res, next) => {
                 });
             };
             const token = jwt.sign({
-                username: user.username,
-                email: user.email, 
-                userId: user._id
+                username: fetchedUser.username,
+                email: fetchedUser.email, 
+                userId: fetchedUser._id
             }, 'secret', {expiresIn: '1h'});
+
+            res.status(200).json({
+                message: 'User Logged in',
+                token: token
+            });
         })
 });
 

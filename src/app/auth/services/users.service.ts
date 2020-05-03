@@ -19,4 +19,16 @@ export class UsersService {
                 console.log(result);
             });
     }
+
+    login(email: string, password: string) {
+        const data = {
+            email,
+            password
+        };
+
+        this.http.post('http://localhost:3000/api/users/login', data)
+            .subscribe(response => {
+                console.log(response);
+            });
+    }
 }

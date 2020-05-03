@@ -4,7 +4,6 @@ import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { UsersService } from 'src/app/auth/services/users.service';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-list',

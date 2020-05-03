@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthData } from '../models/auth-data.model';
-import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class UsersService {
     private token: string;
-    private authStatusListener = new Subject<boolean>();
+    private authStatusListener = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient) {}
 
@@ -41,7 +41,7 @@ export class UsersService {
             .subscribe(response => {
                 console.log(response);
                 this.token = response.token;
-                this.authStatusListener.next(true);
+                this._authStatusListener.next(true);
             });
     }
 }

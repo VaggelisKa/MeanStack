@@ -11,10 +11,11 @@ import { HeaderComponent } from './header/header/header.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PostsService } from './posts/posts.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
 import { UsersService } from './auth/services/users.service';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,11 @@ import { UsersService } from './auth/services/users.service';
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [PostsService, UsersService],
+  providers: [
+    PostsService,
+    UsersService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

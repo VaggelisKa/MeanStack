@@ -4,8 +4,13 @@ import { AuthData } from '../models/auth-data.model';
 
 @Injectable()
 export class UsersService {
+    private token: string;
 
     constructor(private http: HttpClient) {}
+
+    getToken(): string {
+        return this.token;
+    }
 
     createUser(username: string, email: string, password: string) {
         const data: AuthData = {
@@ -26,9 +31,10 @@ export class UsersService {
             password
         };
 
-        this.http.post('http://localhost:3000/api/users/login', data)
+        this.http.post<{message: string, username: string, token: string}>('http://localhost:3000/api/users/login', data)
             .subscribe(response => {
                 console.log(response);
+                this.token = response.token;
             });
     }
 }

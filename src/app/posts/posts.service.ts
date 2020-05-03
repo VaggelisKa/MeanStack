@@ -11,7 +11,8 @@ export class PostsService {
     private posts: Post[] = [];
     isLoading = new Subject<boolean>();
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(private http: HttpClient,
+                private router: Router) {}
 
     getPosts(postsPerPage: number, currentPage: number) {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;

@@ -15,7 +15,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.usersService.getAuthLoading().subscribe(result => {
       this.isLoading = result;
-      console.log(this.isLoading);
     });
   }
 

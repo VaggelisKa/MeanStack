@@ -56,7 +56,8 @@ router.post('/login', (req, res, next) => {
             res.status(200).json({
                 message: 'User Logged in',
                 username: fetchedUser.username,
-                token: token
+                token: token,
+                expiresIn: 3600
             });
         })
 });

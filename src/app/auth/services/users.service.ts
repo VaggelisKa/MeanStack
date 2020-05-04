@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable()
 export class UsersService {
     private token: string;
+    private username: string;
+    private tokenTimer: any;
     private authStatusListener = new BehaviorSubject<boolean>(false);
     private isAuthLoading = new BehaviorSubject<boolean>(false);
 
@@ -13,6 +15,10 @@ export class UsersService {
 
     getToken(): string {
         return this.token;
+    }
+
+    getUsername() {
+        return this.username;
     }
 
     getAuthState(): Observable<boolean> {
@@ -46,12 +52,18 @@ export class UsersService {
             password
         };
 
-        this.http.post<{message: string, username: string, token: string}>('http://localhost:3000/api/users/login', data)
+        this.http.post<{message: string, username: string, token: string, expiresIn: number}>
+            ('http://localhost:3000/api/users/login', data)
             .subscribe(response => {
                 this.isAuthLoading.next(false);
                 this.token = response.token;
 
                 if (this.token) {
+                    this.tokenTimer = setTimeout(() => {
+                        this.logout();
+                    }, response.expiresIn * 1000);
+
+                    this.username = response.username;
                     this.authStatusListener.next(true);
                 }
             });
@@ -59,6 +71,7 @@ export class UsersService {
 
     logout() {
         this.token = null;
+        clearTimeout(this.tokenTimer);
         this.authStatusListener.next(false);
     }
 }

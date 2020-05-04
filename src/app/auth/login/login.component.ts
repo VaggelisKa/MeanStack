@@ -13,6 +13,10 @@ export class LoginComponent implements OnInit {
   constructor(private usersService: UsersService) {}
 
   ngOnInit(): void {
+    this.usersService.getAuthLoading().subscribe(result => {
+      this.isLoading = result;
+      console.log(this.isLoading);
+    });
   }
 
   onSubmit(form: NgForm) {

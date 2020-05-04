@@ -1,5 +1,5 @@
 import { Post } from './models/post.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,10 +9,14 @@ import { Router } from '@angular/router';
 export class PostsService {
     private postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
     private posts: Post[] = [];
-    postsAreLoading = new Subject<boolean>();
+    private postsAreLoading = new Subject<boolean>();
 
     constructor(private http: HttpClient,
                 private router: Router) {}
+
+    getPostsLoading(): Observable<boolean> {
+        return this.postsAreLoading.asObservable();
+    }
 
     getPosts(postsPerPage: number, currentPage: number) {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;

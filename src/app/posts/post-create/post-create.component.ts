@@ -27,7 +27,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.loadingSub = this.postsService.isLoading.subscribe(result => {
+    this.loadingSub = this.postsService.getPostsLoading().subscribe(result => {
       this.isLoading = result;
     });
 

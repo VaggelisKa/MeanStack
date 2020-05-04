@@ -44,11 +44,12 @@
                 <span class="bar"></span>
             </div>
             <div class="input-group">
-                <button type="submit" [disabled]="!authForm.valid">
+                <button type="submit" *ngIf="!isLoading">
                     <mat-icon>send</mat-icon>
                 </button>
             </div>
-            <div class="switch-login">
+            <mat-spinner *ngIf="isLoading"></mat-spinner>
+            <div class="switch-login" *ngIf="!isLoading">
                 <a routerLink="/login">Already have an account? <span>Login</span></a>
             </div>
         </form>

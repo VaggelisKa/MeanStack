@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" *ngIf="!isLoading">
     <div class="form-container">
         <span class="form-heading">Login</span>
         <form (ngSubmit)="onSubmit(authForm)" #authForm="ngForm">
@@ -41,3 +41,4 @@
         </form>
     </div>
 </div>
+<mat-spinner *ngIf="isLoading"></mat-spinner>

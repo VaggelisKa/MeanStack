@@ -1,5 +1,8 @@
 <mat-toolbar color="primary">
-    <span>
+    <span *ngIf="isAuth">
+        <a routerLink="/">Hi {{ username }}</a>
+    </span>
+    <span *ngIf="!isAuth">
         <a routerLink="/">Posts</a>
     </span>
     <span class="spacer"></span>

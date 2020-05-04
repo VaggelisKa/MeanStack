@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthData } from '../models/auth-data.model';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class UsersService {
     private token: string;
-    private username: string;
     private tokenTimer: any;
     private authStatusListener = new BehaviorSubject<boolean>(false);
     private isAuthLoading = new BehaviorSubject<boolean>(false);
+    private username = new BehaviorSubject<string>(null);
 
     constructor(private http: HttpClient) {}
 
@@ -18,7 +19,7 @@ export class UsersService {
     }
 
     getUsername() {
-        return this.username;
+        return this.username.asObservable();
     }
 
     getAuthState(): Observable<boolean> {
@@ -63,7 +64,7 @@ export class UsersService {
                         this.logout();
                     }, response.expiresIn * 1000);
 
-                    this.username = response.username;
+                    this.username.next(response.username);
                     this.authStatusListener.next(true);
                 }
             });

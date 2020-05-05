@@ -8,7 +8,7 @@
             <img [src]="post.imagePath">
         </div>
             
-    <mat-action-row *ngIf="isAuth">
+    <mat-action-row *ngIf="isAuth && post.creator == username">
         <button mat-mini-fab color="warn" (click)="onDelete(post.id)">
             <mat-icon>delete</mat-icon>
         </button>

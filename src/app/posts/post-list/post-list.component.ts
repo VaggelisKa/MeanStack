@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../models/post.model';
 import { PostsService } from '../posts.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { UsersService } from 'src/app/auth/services/users.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-list',
@@ -16,28 +17,39 @@ export class PostListComponent implements OnInit, OnDestroy {
   postsPerPage = 3;
   currentPage = 1;
   totalPosts: number;
+  username: string;
   posts: Post[] = [];
-  postSub: Subscription;
-  loadingSub: Subscription;
-  authSub: Subscription;
+  destroy$ = new Subject<boolean>();
 
 
   constructor(private postsService: PostsService, private usersService: UsersService) { }
 
   ngOnInit(): void {
-    this.loadingSub = this.postsService.getPostsLoading().subscribe(result => {
+    this.postsService.getPostsLoading()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
       this.isLoading = result;
     });
 
     this.postsService.getPosts(this.postsPerPage, this.currentPage);
-    this.postSub = this.postsService.getPostUpdateListener().subscribe((postsData: {posts: Post[], postsCount: number}) => {
-      this.posts = postsData.posts;
-      this.totalPosts = postsData.postsCount;
-    });
+    this.postsService.getPostUpdateListener()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((postsData: {posts: Post[], postsCount: number}) => {
+        this.posts = postsData.posts;
+        this.totalPosts = postsData.postsCount;
+      });
 
-    this.authSub = this.usersService.getAuthState().subscribe(result => {
-      this.isAuth = result;
-    });
+    this.usersService.getAuthState()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        this.isAuth = result;
+      });
+
+    this.usersService.getUsername()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(username => {
+        this.username = username;
+      });
   }
 
 
@@ -48,16 +60,17 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(postId: string) {
-    this.postsService.deletePost(postId).subscribe(() => {
-      this.postsService.getPosts(this.postsPerPage, this.currentPage);
-      this.isLoading = false;
-    });
+    this.postsService.deletePost(postId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.postsService.getPosts(this.postsPerPage, this.currentPage);
+        this.isLoading = false;
+      });
   }
 
   ngOnDestroy() {
-    this.postSub.unsubscribe();
-    this.loadingSub.unsubscribe();
-    this.authSub.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
 }

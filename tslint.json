@@ -117,7 +117,7 @@
         "ban-keywords",
         "check-format",
         "allow-pascal-case",
-        "allow-trailing-underscore"
+        "allow-leading-underscore"
       ]
     },
     "whitespace": {

@@ -36,3 +36,12 @@ button {
 mat-paginator {
     margin-top: 1rem;
 }
+
+#content {
+    font-size: medium;
+}
+
+#creator {
+    font-style: italic;
+    font-size: small;
+}

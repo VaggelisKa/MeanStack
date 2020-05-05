@@ -1,1 +1,31 @@
-<p>my-posts works!</p>
+<mat-accordion *ngIf="posts.length > 0 && !isLoading" multi="false">
+    <mat-expansion-panel *ngFor="let post of posts">
+        <mat-expansion-panel-header color="primary" *ngIf="post.creator == username;">
+            {{post.title}}
+        </mat-expansion-panel-header>
+        <p id="content">{{post.content}}</p>
+        <div class="post-image">
+            <img [src]="post.imagePath">
+        </div>
+            
+    <mat-action-row>
+        <button mat-mini-fab color="warn" (click)="onDelete(post.id)">
+            <mat-icon>delete</mat-icon>
+        </button>
+        
+        <a mat-mini-fab color="accent" [routerLink]="['/edit', post.id]">
+            <mat-icon>edit</mat-icon>
+        </a>
+    </mat-action-row>
+
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-paginator
+    [length]="totalPosts"
+    [pageSize]="postsPerPage"
+    [pageSizeOptions]="[3, 5, 7, 10]"
+    (page)="onPageChange($event)"
+    *ngIf="posts.length > 0 ">
+</mat-paginator>
+<p class="info-text" *ngIf="posts.length <= 0 && !isLoading">No posts Added</p>
+<mat-spinner *ngIf="isLoading"></mat-spinner>

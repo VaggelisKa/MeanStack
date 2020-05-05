@@ -43,7 +43,7 @@ export class PostsService {
             this.posts = transformedPostData.posts;
             this.postsUpdated.next({
                 posts: [...this.posts],
-                postsCount: transformedPostData.maxPosts
+                postsCount: transformedPostData.maxPosts,
             });
             this.postsAreLoading.next(false);
         });

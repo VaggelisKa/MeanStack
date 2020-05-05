@@ -18,6 +18,10 @@ export class PostsService {
         return this.postsAreLoading.asObservable();
     }
 
+    getPostUpdateListener(): Observable<{posts: Post[], postsCount: number}> {
+        return this.postsUpdated.asObservable();
+    }
+
     getPosts(postsPerPage: number, currentPage: number) {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
@@ -45,9 +49,6 @@ export class PostsService {
         });
     }
 
-    getPostUpdateListener() {
-        return this.postsUpdated.asObservable();
-    }
 
     getPost(id: string) {
         this.postsAreLoading.next(true);

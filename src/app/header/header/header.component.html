@@ -20,6 +20,10 @@
         </li>
 
         <li>
+            <a mat-button routerLink="/my-posts" routerLinkActive="mat-accent" *ngIf="isAuth">My Posts</a>
+        </li>
+
+        <li>
             <button
                 mat-flat-button 
                 color="warn" 

@@ -1,0 +1,42 @@
+:host {
+    display: block;
+    margin-top: 20px;
+}
+
+.info-text {
+    text-align: center;
+}
+
+mat-spinner {
+    margin: auto;
+}
+
+button {
+    margin: 3px;
+}
+
+.post-image {
+    width: 100%;
+}
+
+.post-image img{
+    width: 100%;
+    box-shadow: 1px 1px 5px lightgray;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+    font-size: 1.5em;
+  
+    color: RGB(103, 59, 183);
+    font-weight: bold;
+    left: 40%;
+}
+
+
+mat-paginator {
+    margin-top: 1rem;
+}
+
+#content {
+    font-size: medium;
+}

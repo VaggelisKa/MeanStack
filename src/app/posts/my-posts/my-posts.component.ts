@@ -14,9 +14,6 @@ import { PageEvent } from '@angular/material/paginator';
 export class MyPostsComponent implements OnInit, OnDestroy {
   isLoading = false;
   isAuth = false;
-  postsPerPage = 3;
-  currentPage = 1;
-  totalPosts: number;
   username: string;
   posts: Post[] = [];
   destroy$ = new Subject<boolean>();
@@ -31,12 +28,11 @@ export class MyPostsComponent implements OnInit, OnDestroy {
       this.isLoading = result;
     });
 
-    this.postsService.getPosts(this.postsPerPage, this.currentPage);
+    this.postsService.getPosts(null, null);
     this.postsService.getPostUpdateListener()
       .pipe(takeUntil(this.destroy$))
       .subscribe((postsData: {posts: Post[], postsCount: number}) => {
         this.posts = postsData.posts;
-        this.totalPosts = postsData.postsCount;
       });
 
     this.usersService.getAuthState()
@@ -53,17 +49,10 @@ export class MyPostsComponent implements OnInit, OnDestroy {
   }
 
 
-  onPageChange(pageData: PageEvent) {
-    this.currentPage = pageData.pageIndex + 1;
-    this.postsPerPage = pageData.pageSize;
-    this.postsService.getPosts(this.postsPerPage, this.currentPage);
-  }
-
   onDelete(postId: string) {
     this.postsService.deletePost(postId)
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.postsService.getPosts(this.postsPerPage, this.currentPage);
         this.isLoading = false;
       });
   }

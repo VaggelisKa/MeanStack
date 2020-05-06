@@ -10,6 +10,7 @@ export class PostsService {
     private postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
     private posts: Post[] = [];
     private postsAreLoading = new Subject<boolean>();
+    public wantsToDelete: boolean;
 
     constructor(private http: HttpClient,
                 private router: Router) {}
@@ -104,8 +105,13 @@ export class PostsService {
     }
 
     deletePost(id: string) {
+        this.dialogAnswer();
         this.postsAreLoading.next(true);
         return this.http.delete('http://localhost:3000/api/posts/' + id);
+    }
+
+    dialogAnswer() {
+        this.wantsToDelete = true;
     }
 }
 

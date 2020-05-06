@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-delete-dialog',
@@ -11,5 +11,4 @@ export class DeleteDialogComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

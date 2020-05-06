@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthData } from '../models/auth-data.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class UsersService {
@@ -10,6 +11,7 @@ export class UsersService {
     private authStatusListener = new BehaviorSubject<boolean>(false);
     private isAuthLoading = new BehaviorSubject<boolean>(false);
     private username = new BehaviorSubject<string>(null);
+    private _authErrorSubj = new BehaviorSubject<any>(null);
 
     constructor(private http: HttpClient) {}
 
@@ -27,6 +29,10 @@ export class UsersService {
 
     getAuthLoading(): Observable<boolean> {
         return this.isAuthLoading.asObservable();
+    }
+
+    getAuthError(): Observable<any> {
+        return this._authErrorSubj.asObservable();
     }
 
     createUser(username: string, email: string, password: string) {
@@ -54,6 +60,11 @@ export class UsersService {
 
         this.http.post<{message: string, username: string, token: string, expiresIn: number}>
             ('http://localhost:3000/api/users/login', data)
+            .pipe(catchError(err => {
+                this._authErrorSubj.next(err);
+                this.isAuthLoading.next(false);
+                return of(err);
+            }))
             .subscribe(response => {
                 this.isAuthLoading.next(false);
                 this.token = response.token;

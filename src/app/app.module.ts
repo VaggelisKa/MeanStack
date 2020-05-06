@@ -17,6 +17,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { UsersService } from './auth/services/users.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { MyPostsComponent } from './posts/my-posts/my-posts.component';
+import { SnackbarService } from './shared/snackbar.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MyPostsComponent } from './posts/my-posts/my-posts.component';
   providers: [
     PostsService,
     UsersService,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    SnackbarService
   ],
   bootstrap: [AppComponent]
 })

@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         MatIconModule,
         MatProgressSpinnerModule,
         MatPaginatorModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatSnackBarModule
     ]
 })
 export class MaterialModule {}

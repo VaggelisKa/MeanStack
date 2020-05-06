@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../models/post.model';
 import { PostsService } from '../posts.service';
-import { Subscription, Subject } from 'rxjs';
+import {  Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { takeUntil } from 'rxjs/operators';

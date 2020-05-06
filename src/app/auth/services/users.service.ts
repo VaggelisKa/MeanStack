@@ -31,7 +31,7 @@ export class UsersService {
         return this.isAuthLoading.asObservable();
     }
 
-    getAuthError(): Observable<any> {
+    getAuthError(): Observable<string> {
         return this._authErrorSubj.asObservable();
     }
 

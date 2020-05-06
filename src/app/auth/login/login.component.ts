@@ -2,7 +2,7 @@ import { Component, OnInit, Type, AfterViewInit, OnDestroy } from '@angular/core
 import { NgForm } from '@angular/forms';
 import { UsersService } from '../services/users.service';
 import { SnackbarService } from 'src/app/shared/snackbar.service';
-import { takeUntil, delay, take, takeLast } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({

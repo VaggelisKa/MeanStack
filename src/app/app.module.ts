@@ -18,6 +18,7 @@ import { UsersService } from './auth/services/users.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { MyPostsComponent } from './posts/my-posts/my-posts.component';
 import { SnackbarService } from './shared/snackbar.service';
+import { DeleteDialogComponent } from './posts/post-list/dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SnackbarService } from './shared/snackbar.service';
     PostListComponent,
     LoginComponent,
     SignupComponent,
-    MyPostsComponent
+    MyPostsComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { UsersService } from '../services/users.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SnackbarService } from 'src/app/shared/snackbar.service';
 
 @Component({
   selector: 'app-signup',
@@ -13,7 +14,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   isLoading = false;
   destroy$ = new Subject<boolean>();
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService,
+              private _snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.usersService.getAuthLoading()
@@ -27,7 +29,18 @@ export class SignupComponent implements OnInit, OnDestroy {
     this.usersService.createUser(
       form.value.username,
       form.value.email,
-      form.value.password);
+      form.value.password)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+
+    this.usersService.getAuthError()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(error => {
+        console.log(error);
+        if (error) {
+          this._snackbarService.openSnackBar(error, 8000);
+        }
+      });
   }
 
   ngOnDestroy() {

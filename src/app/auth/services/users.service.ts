@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthData } from '../models/auth-data.model';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class UsersService {
@@ -11,7 +11,7 @@ export class UsersService {
     private authStatusListener = new BehaviorSubject<boolean>(false);
     private isAuthLoading = new BehaviorSubject<boolean>(false);
     private username = new BehaviorSubject<string>(null);
-    private _authErrorSubj = new BehaviorSubject<any>(null);
+    private _authErrorSubj = new Subject<string>();
 
     constructor(private http: HttpClient) {}
 
@@ -35,7 +35,7 @@ export class UsersService {
         return this._authErrorSubj.asObservable();
     }
 
-    createUser(username: string, email: string, password: string) {
+    createUser(username: string, email: string, password: string): Observable<any> {
         this.isAuthLoading.next(true);
 
         const data: AuthData = {
@@ -44,13 +44,19 @@ export class UsersService {
             password
         };
 
-        this.http.post('http://localhost:3000/api/users/signup', data)
-            .subscribe((_) => {
+        return this.http.post('http://localhost:3000/api/users/signup', data)
+            .pipe(tap((_) => {
                 this.isAuthLoading.next(false);
-            });
+            }),
+            catchError(err => {
+                this.isAuthLoading.next(false);
+                this._authErrorSubj.next(err.error.error.message);
+                return of(err);
+            })
+            );
     }
 
-    login(email: string, password: string) {
+    login(email: string, password: string): Observable<boolean> {
         this.isAuthLoading.next(true);
 
         const data = {
@@ -58,31 +64,32 @@ export class UsersService {
             password
         };
 
-        this.http.post<{message: string, username: string, token: string, expiresIn: number}>
+        return this.http.post<{message: string, username: string, token: string, expiresIn: number}>
             ('http://localhost:3000/api/users/login', data)
-            .pipe(catchError(err => {
-                this._authErrorSubj.next(err);
-                this.isAuthLoading.next(false);
-                return of(err);
-            }))
-            .subscribe(response => {
-                this.isAuthLoading.next(false);
-                this.token = response.token;
+            .pipe(tap(response => {
+                    this.isAuthLoading.next(false);
+                    this.token = response.token;
 
-                this.setTokenTimer(response.expiresIn);
+                    this.setTokenTimer(response.expiresIn);
 
-                if (this.token) {
-                    this.username.next(response.username);
-                    this.authStatusListener.next(true);
+                    if (this.token) {
+                        this.username.next(response.username);
+                        this.authStatusListener.next(true);
 
-                    const currentDate = new Date();
-                    this.saveAuthData(
-                        response.username,
-                        this.token,
-                        new Date(currentDate.getTime() + response.expiresIn * 1000)
-                        );
+                        const currentDate = new Date();
+                        this.saveAuthData(
+                            response.username,
+                            this.token,
+                            new Date(currentDate.getTime() + response.expiresIn * 1000)
+                            );
+                    }
                 }
-            });
+            ),
+                catchError(err => {
+                    this._authErrorSubj.next(err.error.message);
+                    this.isAuthLoading.next(false);
+                    return of(err);
+            }));
     }
 
     autoAuthUser() {

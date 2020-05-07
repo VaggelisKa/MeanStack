@@ -7,26 +7,26 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class PostsService {
-    private postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
+    private _postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
+    private _postsAreLoading = new Subject<boolean>();
     private posts: Post[] = [];
-    private postsAreLoading = new Subject<boolean>();
 
-    constructor(private http: HttpClient,
-                private router: Router) {}
+    constructor(private _http: HttpClient,
+                private _router: Router) {}
 
     getPostsLoading(): Observable<boolean> {
-        return this.postsAreLoading.asObservable();
+        return this._postsAreLoading.asObservable();
     }
 
     getPostUpdateListener(): Observable<{posts: Post[], postsCount: number}> {
-        return this.postsUpdated.asObservable();
+        return this._postsUpdated.asObservable();
     }
 
     getPosts(postsPerPage: number, currentPage: number) {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
-        this.postsAreLoading.next(true);
-        this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
+        this._postsAreLoading.next(true);
+        this._http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
         .pipe(map(postData => {
             return {posts: postData.posts.map(post => {
                 return {
@@ -41,18 +41,18 @@ export class PostsService {
         .subscribe(transformedPostData => {
             console.log(transformedPostData);
             this.posts = transformedPostData.posts;
-            this.postsUpdated.next({
+            this._postsUpdated.next({
                 posts: [...this.posts],
                 postsCount: transformedPostData.maxPosts,
             });
-            this.postsAreLoading.next(false);
+            this._postsAreLoading.next(false);
         });
     }
 
 
     getPost(id: string) {
-        this.postsAreLoading.next(true);
-        return this.http.get<{
+        this._postsAreLoading.next(true);
+        return this._http.get<{
             _id: string,
             title: string,
             content: string,
@@ -81,31 +81,31 @@ export class PostsService {
             };
         }
 
-        this.postsAreLoading.next(true);
-        this.http.put('http://localhost:3000/api/posts/' + id, postData)
+        this._postsAreLoading.next(true);
+        this._http.put('http://localhost:3000/api/posts/' + id, postData)
         .subscribe(() => {
-            this.router.navigate(['/']);
-            this.postsAreLoading.next(false);
+            this._router.navigate(['/']);
+            this._postsAreLoading.next(false);
         });
     }
 
     addPost(title: string, content: string, image: File) {
-        this.postsAreLoading.next(true);
+        this._postsAreLoading.next(true);
         const postData = new FormData();
         postData.append('title', title);
         postData.append('content', content);
         postData.append('image', image, title);
 
-        this.http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
+        this._http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
         .subscribe(() => {
-            this.router.navigate(['/']);
-            this.postsAreLoading.next(false);
+            this._router.navigate(['/']);
+            this._postsAreLoading.next(false);
         });
     }
 
     deletePost(id: string): Observable<any> {
-        this.postsAreLoading.next(true);
-        return this.http.delete('http://localhost:3000/api/posts/' + id);
+        this._postsAreLoading.next(true);
+        return this._http.delete('http://localhost:3000/api/posts/' + id);
     }
 }
 

@@ -21,13 +21,13 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   private mode = 'create';
   private postId: string;
 
-  loadingSub: Subscription;
+  _loadingSub: Subscription;
 
-  constructor(private postsService: PostsService,
-              private route: ActivatedRoute) {}
+  constructor(private _postsService: PostsService,
+              private _route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.loadingSub = this.postsService.getPostsLoading().subscribe(result => {
+    this._loadingSub = this._postsService.getPostsLoading().subscribe(result => {
       this.isLoading = result;
     });
 
@@ -43,11 +43,11 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       })
     });
 
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    this._route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
-        this.postsService.getPost(this.postId).subscribe(postData => {
+        this._postsService.getPost(this.postId).subscribe(postData => {
           this.isLoading = false;
           this.post = {
             id: postData._id,
@@ -87,10 +87,10 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.mode === 'create') {
-      this.postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
+      this._postsService.addPost(this.form.value.title, this.form.value.content, this.form.value.image);
     }
     else {
-      this.postsService.updatePost(
+      this._postsService.updatePost(
         this.postId,
         this.form.value.title,
         this.form.value.content,
@@ -102,7 +102,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.loadingSub.unsubscribe();
+    this._loadingSub.unsubscribe();
   }
 
 }

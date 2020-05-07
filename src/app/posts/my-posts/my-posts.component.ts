@@ -4,7 +4,8 @@ import { Subject } from 'rxjs';
 import { PostsService } from '../posts.service';
 import { UsersService } from 'src/app/auth/services/users.service';
 import { takeUntil } from 'rxjs/operators';
-import { PageEvent } from '@angular/material/paginator';
+import { DeleteDialogComponent } from '../post-list/dialog/delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-my-posts',
@@ -19,7 +20,9 @@ export class MyPostsComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<boolean>();
 
 
-  constructor(private postsService: PostsService, private usersService: UsersService) { }
+  constructor(private postsService: PostsService,
+              private usersService: UsersService,
+              private _dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.postsService.getPostsLoading()
@@ -28,11 +31,18 @@ export class MyPostsComponent implements OnInit, OnDestroy {
       this.isLoading = result;
     });
 
+    this.usersService.getUsername()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(username => {
+        this.username = username;
+      });
+
     this.postsService.getPosts(null, null);
     this.postsService.getPostUpdateListener()
       .pipe(takeUntil(this.destroy$))
       .subscribe((postsData: {posts: Post[], postsCount: number}) => {
-        this.posts = postsData.posts;
+        this.posts = postsData.posts.filter(posts => posts.creator === this.username);
+        console.log(this.posts);
       });
 
     this.usersService.getAuthState()
@@ -40,21 +50,21 @@ export class MyPostsComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         this.isAuth = result;
       });
-
-    this.usersService.getUsername()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(username => {
-        this.username = username;
-      });
   }
 
 
   onDelete(postId: string) {
-    this.postsService.deletePost(postId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.isLoading = false;
-      });
+    const dialogRef = this._dialog.open(DeleteDialogComponent);
+    dialogRef.afterClosed().subscribe(wantsToDelete => {
+      if (wantsToDelete) {
+        this.postsService.deletePost(postId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.isLoading = false;
+          this.postsService.getPosts(null, null);
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

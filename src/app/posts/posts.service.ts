@@ -1,6 +1,6 @@
 import { Post } from './models/post.model';
 import { Subject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ export class PostsService {
     private postsUpdated = new Subject<{posts: Post[], postsCount: number}>();
     private posts: Post[] = [];
     private postsAreLoading = new Subject<boolean>();
-    public wantsToDelete: boolean;
 
     constructor(private http: HttpClient,
                 private router: Router) {}
@@ -39,7 +38,7 @@ export class PostsService {
                 };
             }), maxPosts: postData.maxPosts};
         }))
-        .subscribe((transformedPostData) => {
+        .subscribe(transformedPostData => {
             console.log(transformedPostData);
             this.posts = transformedPostData.posts;
             this.postsUpdated.next({
@@ -104,14 +103,9 @@ export class PostsService {
         });
     }
 
-    deletePost(id: string) {
-        this.dialogAnswer();
+    deletePost(id: string): Observable<any> {
         this.postsAreLoading.next(true);
         return this.http.delete('http://localhost:3000/api/posts/' + id);
-    }
-
-    dialogAnswer() {
-        this.wantsToDelete = true;
     }
 }
 

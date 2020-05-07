@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm): void {
     this.usersService.login(form.value.email, form.value.password).subscribe();
 
     this.usersService.getAuthError()
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.unsubscribe();
   }

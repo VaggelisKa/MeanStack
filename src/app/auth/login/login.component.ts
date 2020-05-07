@@ -27,9 +27,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   onSubmit(form: NgForm) {
-    this.usersService.login(form.value.email, form.value.password)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    this.usersService.login(form.value.email, form.value.password).subscribe();
 
     this.usersService.getAuthError()
       .pipe(takeUntil(this.destroy$))

@@ -30,7 +30,6 @@ export class SignupComponent implements OnInit, OnDestroy {
       form.value.username,
       form.value.email,
       form.value.password)
-      .pipe(takeUntil(this.destroy$))
       .subscribe();
 
     this.usersService.getAuthError()

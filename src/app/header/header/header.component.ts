@@ -10,23 +10,23 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject<boolean>();
+  private _destroy = new Subject<boolean>();
   username: string;
   isAuth = false;
 
-  constructor(private usersService: UsersService,
-              private router: Router) {}
+  constructor(private _usersService: UsersService,
+              private _router: Router) {}
 
   ngOnInit(): void {
-    this.usersService.getAuthState()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getAuthState()
+      .pipe(takeUntil(this._destroy))
       .subscribe(authState => {
         this.isAuth = authState;
-        this.router.navigate(['/']);
+        this._router.navigate(['/']);
       });
 
-    this.usersService.getUsername()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getUsername()
+      .pipe(takeUntil(this._destroy))
       .subscribe(username => {
         this.username = username;
       });
@@ -34,13 +34,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout() {
-    this.usersService.logout();
-    this.router.navigate(['/login']);
+    this._usersService.logout();
+    this._router.navigate(['/login']);
   }
 
   ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this._destroy.next(true);
+    this._destroy.unsubscribe();
   }
 
 }

@@ -12,28 +12,28 @@ import { SnackbarService } from 'src/app/shared/snackbar.service';
 })
 export class SignupComponent implements OnInit, OnDestroy {
   isLoading = false;
-  destroy$ = new Subject<boolean>();
+  _destroy = new Subject<boolean>();
 
-  constructor(private usersService: UsersService,
+  constructor(private _usersService: UsersService,
               private _snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
-    this.usersService.getAuthLoading()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getAuthLoading()
+      .pipe(takeUntil(this._destroy))
       .subscribe(result => {
         this.isLoading = result;
       });
   }
 
   onSignup(form: NgForm) {
-    this.usersService.createUser(
+    this._usersService.createUser(
       form.value.username,
       form.value.email,
       form.value.password)
       .subscribe();
 
-    this.usersService.getAuthError()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getAuthError()
+      .pipe(takeUntil(this._destroy))
       .subscribe(error => {
         console.log(error);
         if (error) {
@@ -43,8 +43,8 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this._destroy.next(true);
+    this._destroy.unsubscribe();
   }
 
 }

@@ -8,27 +8,27 @@ import { catchError, tap } from 'rxjs/operators';
 export class UsersService {
     private token: string;
     private tokenTimer: any;
-    private authStatusListener = new BehaviorSubject<boolean>(false);
-    private isAuthLoading = new BehaviorSubject<boolean>(false);
-    private username = new BehaviorSubject<string>(null);
+    private _authStatusListener = new BehaviorSubject<boolean>(false);
+    private _isAuthLoading = new BehaviorSubject<boolean>(false);
+    private _username = new BehaviorSubject<string>(null);
     private _authErrorSubj = new Subject<string>();
 
-    constructor(private http: HttpClient) {}
+    constructor(private _http: HttpClient) {}
 
     getToken(): string {
         return this.token;
     }
 
     getUsername(): Observable<string> {
-        return this.username.asObservable();
+        return this._username.asObservable();
     }
 
     getAuthState(): Observable<boolean> {
-        return this.authStatusListener.asObservable();
+        return this._authStatusListener.asObservable();
     }
 
     getAuthLoading(): Observable<boolean> {
-        return this.isAuthLoading.asObservable();
+        return this._isAuthLoading.asObservable();
     }
 
     getAuthError(): Observable<string> {
@@ -36,7 +36,7 @@ export class UsersService {
     }
 
     createUser(username: string, email: string, password: string): Observable<any> {
-        this.isAuthLoading.next(true);
+        this._isAuthLoading.next(true);
 
         const data: AuthData = {
             username,
@@ -44,12 +44,12 @@ export class UsersService {
             password
         };
 
-        return this.http.post('http://localhost:3000/api/users/signup', data)
+        return this._http.post('http://localhost:3000/api/users/signup', data)
             .pipe(tap((_) => {
-                this.isAuthLoading.next(false);
+                this._isAuthLoading.next(false);
             }),
             catchError(err => {
-                this.isAuthLoading.next(false);
+                this._isAuthLoading.next(false);
                 this._authErrorSubj.next(err.error.error.message);
                 return of(err);
             })
@@ -57,24 +57,24 @@ export class UsersService {
     }
 
     login(email: string, password: string): Observable<boolean> {
-        this.isAuthLoading.next(true);
+        this._isAuthLoading.next(true);
 
         const data = {
             email,
             password
         };
 
-        return this.http.post<{message: string, username: string, token: string, expiresIn: number}>
+        return this._http.post<{message: string, username: string, token: string, expiresIn: number}>
             ('http://localhost:3000/api/users/login', data)
             .pipe(tap(response => {
-                    this.isAuthLoading.next(false);
+                    this._isAuthLoading.next(false);
                     this.token = response.token;
 
                     this.setTokenTimer(response.expiresIn);
 
                     if (this.token) {
-                        this.username.next(response.username);
-                        this.authStatusListener.next(true);
+                        this._username.next(response.username);
+                        this._authStatusListener.next(true);
 
                         const currentDate = new Date();
                         this.saveAuthData(
@@ -87,7 +87,7 @@ export class UsersService {
             ),
                 catchError(err => {
                     this._authErrorSubj.next(err.error.message);
-                    this.isAuthLoading.next(false);
+                    this._isAuthLoading.next(false);
                     return of(err);
             }));
     }
@@ -101,15 +101,15 @@ export class UsersService {
         if (expiresIn > 0) {
             this.token = this.getAuthData().token;
             this.setTokenTimer(expiresIn / 1000);
-            this.authStatusListener.next(true);
-            this.username.next(this.getAuthData().username);
+            this._authStatusListener.next(true);
+            this._username.next(this.getAuthData().username);
         }
     }
 
     logout() {
         this.token = null;
         clearTimeout(this.tokenTimer);
-        this.authStatusListener.next(false);
+        this._authStatusListener.next(false);
         this.clearAuthData();
     }
 

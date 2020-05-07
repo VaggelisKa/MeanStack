@@ -6,14 +6,14 @@ import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private usersService: UsersService, private router: Router) {}
+    constructor(private _usersService: UsersService, private _router: Router) {}
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+    canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot):
         boolean | UrlTree | Observable<boolean> | Promise<boolean> {
-            return this.usersService.getAuthState().pipe(tap(isAuth => {
+            return this._usersService.getAuthState().pipe(tap(isAuth => {
                 console.log(isAuth);
                 if (!isAuth) {
-                    this.router.navigate(['/login']);
+                    this._router.navigate(['/login']);
                 }
                 return isAuth;
             }

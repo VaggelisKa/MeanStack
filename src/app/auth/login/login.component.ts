@@ -12,14 +12,14 @@ import { Subject } from 'rxjs';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   isLoading = false;
-  destroy$ = new Subject();
+  _destroy = new Subject();
 
-  constructor(private usersService: UsersService,
+  constructor(private _usersService: UsersService,
               private _snackbarService: SnackbarService) {}
 
   ngOnInit(): void {
-    this.usersService.getAuthLoading()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getAuthLoading()
+      .pipe(takeUntil(this._destroy))
       .subscribe(result => {
         this.isLoading = result;
       });
@@ -27,10 +27,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   onSubmit(form: NgForm): void {
-    this.usersService.login(form.value.email, form.value.password).subscribe();
+    this._usersService.login(form.value.email, form.value.password).subscribe();
 
-    this.usersService.getAuthError()
-      .pipe(takeUntil(this.destroy$))
+    this._usersService.getAuthError()
+      .pipe(takeUntil(this._destroy))
       .subscribe(error => {
         console.log(error);
         if (error) {
@@ -40,8 +40,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this._destroy.next(true);
+    this._destroy.unsubscribe();
   }
 
 }

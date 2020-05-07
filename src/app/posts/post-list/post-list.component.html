@@ -10,7 +10,7 @@
         <p id="creator">Posted by {{ post.creator }}</p>
             
     <mat-action-row *ngIf="isAuth && post.creator == username">
-        <button mat-mini-fab color="warn" [wantToDelete]="clickedYes" (click)="onDelete(post.id)">
+        <button mat-mini-fab color="warn"  (click)="onDelete(post.id)">
             <mat-icon>delete</mat-icon>
         </button>
         

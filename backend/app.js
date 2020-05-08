@@ -8,7 +8,7 @@ var userRoutes = require('./routes/users');
 
 var app = express();
 
-mongoose.connect('mongodb+srv://Vaggelis:WMWhztV00SN8qaoC@cluster0-oaxjo.mongodb.net/node-angular?retryWrites=true&w=majority', 
+mongoose.connect('mongodb+srv://Vaggelis:' + process.env.MONGO_ATLAS_PASSWORD + '@cluster0-oaxjo.mongodb.net/node-angular?retryWrites=true&w=majority', 
                 { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: true,})
     .then(() => {
         console.log('connected to database');

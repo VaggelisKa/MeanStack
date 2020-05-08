@@ -1,9 +1,13 @@
 import { Post } from './models/post.model';
 import { Subject, Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { environment } from '../../environments/environment';
+
+const API_URL = environment.apiUrl + '/posts/';
 
 @Injectable()
 export class PostsService {
@@ -26,7 +30,7 @@ export class PostsService {
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
 
         this._postsAreLoading.next(true);
-        this._http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
+        this._http.get<{message: string, posts: any, maxPosts: number}>(API_URL + queryParams)
         .pipe(map(postData => {
             return {posts: postData.posts.map(post => {
                 return {
@@ -58,7 +62,7 @@ export class PostsService {
             content: string,
             imagePath: string,
             creator: string
-        }>('http://localhost:3000/api/posts/' + id);
+        }>(API_URL + id);
     }
 
     updatePost(id: string, title: string, content: string, image: File | string) {
@@ -82,7 +86,7 @@ export class PostsService {
         }
 
         this._postsAreLoading.next(true);
-        this._http.put('http://localhost:3000/api/posts/' + id, postData)
+        this._http.put(API_URL + id, postData)
         .subscribe(() => {
             this._router.navigate(['/']);
             this._postsAreLoading.next(false);
@@ -96,7 +100,7 @@ export class PostsService {
         postData.append('content', content);
         postData.append('image', image, title);
 
-        this._http.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
+        this._http.post<{message: string, post: Post}>(API_URL, postData)
         .subscribe(() => {
             this._router.navigate(['/']);
             this._postsAreLoading.next(false);
@@ -105,7 +109,7 @@ export class PostsService {
 
     deletePost(id: string): Observable<any> {
         this._postsAreLoading.next(true);
-        return this._http.delete('http://localhost:3000/api/posts/' + id);
+        return this._http.delete(API_URL + id);
     }
 }
 

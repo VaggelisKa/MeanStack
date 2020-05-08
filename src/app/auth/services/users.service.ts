@@ -4,6 +4,10 @@ import { AuthData } from '../models/auth-data.model';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
+
+const API_URL = environment.apiUrl + '/users/';
+
 @Injectable()
 export class UsersService {
     private token: string;
@@ -44,7 +48,7 @@ export class UsersService {
             password
         };
 
-        return this._http.post('http://localhost:3000/api/users/signup', data)
+        return this._http.post(API_URL + 'signup', data)
             .pipe(tap((_) => {
                 this._isAuthLoading.next(false);
             }),
@@ -65,7 +69,7 @@ export class UsersService {
         };
 
         return this._http.post<{message: string, username: string, token: string, expiresIn: number}>
-            ('http://localhost:3000/api/users/login', data)
+            (API_URL + 'login', data)
             .pipe(tap(response => {
                     this._isAuthLoading.next(false);
                     this.token = response.token;

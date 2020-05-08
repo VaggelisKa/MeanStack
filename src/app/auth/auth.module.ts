@@ -6,6 +6,7 @@ import { AuthRoutingModule } from './auth-routing.module';
 
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { MaterialModule } from '../material.module';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,7 @@ import { SignupComponent } from './signup/signup.component';
         FormsModule,
         CommonModule,
         RouterModule,
+        MaterialModule,
         AuthRoutingModule
     ]
 })

@@ -13,7 +13,6 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UsersService } from './auth/services/users.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { SnackbarService } from './shared/snackbar.service';
-import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +26,6 @@ import { AuthModule } from './auth/auth.module';
     MaterialModule,
     HttpClientModule,
     PostsModule,
-    AuthModule
   ],
   providers: [
     PostsService,

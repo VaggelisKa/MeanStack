@@ -8,30 +8,26 @@ import { PostsModule } from './posts/posts.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header/header.component';
-import { FormsModule } from '@angular/forms';
 import { PostsService } from './posts/posts.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SignupComponent } from './auth/signup/signup.component';
-import { LoginComponent } from './auth/login/login.component';
 import { UsersService } from './auth/services/users.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { SnackbarService } from './shared/snackbar.service';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    LoginComponent,
-    SignupComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FormsModule,
     HttpClientModule,
-    PostsModule
+    PostsModule,
+    AuthModule
   ],
   providers: [
     PostsService,

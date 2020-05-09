@@ -12,6 +12,9 @@
           "/manifest.webmanifest",
           "/*.css",
           "/*.js"
+        ],
+        "urls": [
+          "http://meanstack-env.eba-ijk6kten.us-east-2.elasticbeanstalk.com/**"
         ]
       }
     }, {
@@ -29,7 +32,9 @@
   "dataGroups": [
     {
       "name": "posts",
-      "urls": ["http://localhost:3000/api/posts"],
+      "urls": [
+        "http://meanstack-env.eba-ijk6kten.us-east-2.elasticbeanstalk.com"
+      ],
       "cacheConfig": {
         "maxSize": 10,
         "maxAge": "1h",

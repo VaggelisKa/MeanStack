@@ -19,6 +19,17 @@ button {
     width: 100%;
 }
 
+a {
+    color: gray;
+    font-size: .9rem;
+    text-align: center;
+    padding: 1rem;
+}
+
+a:hover {
+    color: #673bb7;
+}
+
 .post-image img{
     width: 100%;
     box-shadow: 1px 1px 5px lightgray;
